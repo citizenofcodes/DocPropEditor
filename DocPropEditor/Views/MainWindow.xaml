@@ -4,19 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DocPropEditor"
+        xmlns:vm ="clr-namespace:DocPropEditor.ViewModels"
         mc:Ignorable="d"
         Title="DocPropEditor" Height="275" Width="175">
+        <Window.DataContext>
+            <vm:MainWindowViewModel></vm:MainWindowViewModel>
+        </Window.DataContext>
     <Grid>
         <StackPanel>
             <Label Content="Creator"></Label>
-            <TextBox MinHeight="20" ></TextBox>
+            <TextBox x:Name="CreatorBox" MinHeight="20" Text="{Binding Creator , UpdateSourceTrigger=PropertyChanged}" ></TextBox>
             <Label Content="Edit time ( in minutes )"></Label>
-            <TextBox MinHeight="20" ></TextBox>
+            <TextBox x:Name="TotalTimeBox" MinHeight="20" Text="{Binding TotalTime , UpdateSourceTrigger=PropertyChanged}"></TextBox>
             <Label Content="Created"></Label>
-            <TextBox MinHeight="20" ></TextBox>
+            <TextBox x:Name="CreatedTimeBox" MinHeight="20" Text="{Binding CreateDate ,UpdateSourceTrigger=PropertyChanged}" ></TextBox>
             <Label Content="Modified"></Label>
-            <TextBox MinHeight="20" ></TextBox>
-            <Button Content="Edit"></Button>
+            <TextBox x:Name="ModifiedTimeBox" MinHeight="20" Text="{Binding ModifiedDate,UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+            <Button  Content="Edit" Command="{Binding editCommand}"></Button>
         </StackPanel>
     </Grid>
 </Window>
