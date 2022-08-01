@@ -8,7 +8,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="WordHacker" Height="300" Width="250" ResizeMode="NoResize">
+        Title="WordHacker" Height="300" Width="227" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding OnloadCommand}"></i:InvokeCommandAction>
@@ -18,7 +18,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Border  Margin="0,4,4,4" Padding="5" BorderThickness="0.2" BorderBrush="Black" CornerRadius="3" HorizontalAlignment="Center">
+        <Border  Margin="0,4,0,4" Padding="5" BorderThickness="0.2" BorderBrush="Black" CornerRadius="3" HorizontalAlignment="Center" Width="179">
             <StackPanel Grid.ColumnSpan="2">
                 <Label Content="Creator"></Label>
                 <TextBox x:Name="CreatorBox" MinHeight="20" Text="{Binding Creator , UpdateSourceTrigger=PropertyChanged}" ></TextBox>
