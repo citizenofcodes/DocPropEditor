@@ -5,22 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DocPropEditor"
         xmlns:vm ="clr-namespace:DocPropEditor.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="DocPropEditor" Height="275" Width="175">
-        <Window.DataContext>
-            <vm:MainWindowViewModel></vm:MainWindowViewModel>
-        </Window.DataContext>
+        Title="WordHacker" Height="300" Width="250" ResizeMode="NoResize">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnloadCommand}"></i:InvokeCommandAction>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
-        <StackPanel>
-            <Label Content="Creator"></Label>
-            <TextBox x:Name="CreatorBox" MinHeight="20" Text="{Binding Creator , UpdateSourceTrigger=PropertyChanged}" ></TextBox>
-            <Label Content="Edit time ( in minutes )"></Label>
-            <TextBox x:Name="TotalTimeBox" MinHeight="20" Text="{Binding TotalTime , UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            <Label Content="Created"></Label>
-            <TextBox x:Name="CreatedTimeBox" MinHeight="20" Text="{Binding CreateDate ,UpdateSourceTrigger=PropertyChanged}" ></TextBox>
-            <Label Content="Modified"></Label>
-            <TextBox x:Name="ModifiedTimeBox" MinHeight="20" Text="{Binding ModifiedDate,UpdateSourceTrigger=PropertyChanged}" ></TextBox>
-            <Button  Content="Edit" Command="{Binding editCommand}"></Button>
-        </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Border  Margin="0,4,4,4" Padding="5" BorderThickness="0.2" BorderBrush="Black" CornerRadius="3" HorizontalAlignment="Center">
+            <StackPanel Grid.ColumnSpan="2">
+                <Label Content="Creator"></Label>
+                <TextBox x:Name="CreatorBox" MinHeight="20" Text="{Binding Creator , UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                <Label Content="Edit time ( in minutes )"></Label>
+                <TextBox x:Name="TotalTimeBox" MinHeight="20" Text="{Binding TotalTime , UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <Label Content="Created"></Label>
+                <TextBox x:Name="CreatedTimeBox" MinHeight="20" Text="{Binding CreateDate ,UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                <Label Content="Modified"></Label>
+                <TextBox x:Name="ModifiedTimeBox" MinHeight="20" Text="{Binding ModifiedDate,UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                <Button Background="White"  Command="{Binding OpenFIleCommand}" Margin="0,10,0,0" MaxWidth="50" HorizontalAlignment="Left">
+                    <Image Source="/Resourses/directoryicon.png" MaxWidth="25"></Image>
+                </Button>
+
+                <Button  Content="Edit" Command="{Binding EditCommand}" Margin="0,5,0,0" MaxWidth="100"></Button>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

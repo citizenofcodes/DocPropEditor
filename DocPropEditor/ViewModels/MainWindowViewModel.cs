@@ -4,16 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using DocPropEditor.Infrastructure.Command;
+using DocPropEditor.Models;
+using DocPropEditor.Services;
 
 namespace DocPropEditor.ViewModels
 {
     internal class MainWindowViewModel : BaseVm
     {
-        public ICommand editCommand { get; set; }
+        private readonly IFileService _fileService;
 
-        private string _creator;
+        public ICommand OpenFIleCommand { get; set; }
+        public ICommand EditCommand { get; set; }
+        
+        
 
-        public string Creator
+        private string? _creator;
+
+        public string? Creator
         {
             get { return _creator; }
             set
@@ -24,9 +32,9 @@ namespace DocPropEditor.ViewModels
         }
 
 
-        private string _totalTime;
+        private string? _totalTime;
 
-        public string TotalTime
+        public string? TotalTime
         {
             get { return _totalTime; }
             set
@@ -36,9 +44,9 @@ namespace DocPropEditor.ViewModels
             }
         }
 
-        private string _createDate;
+        private string? _createDate;
 
-        public string CreateDate
+        public string? CreateDate
         {
             get { return _createDate; }
             set
@@ -48,18 +56,46 @@ namespace DocPropEditor.ViewModels
             }
         }
 
-        private string _modifiedDate;
+        private string? _modifiedDate;
 
-        public string ModifiedDate
+        public string? ModifiedDate
         {
             get { return _modifiedDate; }
             set { _modifiedDate = value; OnPropertyChanged(); }
         }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IFileService fileService)
         {
-            
+            _fileService = fileService;
+            EditCommand = new Command(EditFile);
+            OpenFIleCommand = new Command(Onload);
         }
+
+        private void Onload(object obj)
+        {
+
+            var docprop = _fileService.OpenArchiveAndGetData();
+            Creator = docprop.Creator;
+            TotalTime = docprop.TotalTime;
+            CreateDate = docprop.CreationDate;
+            ModifiedDate = docprop.ModifiedDate;
+
+        }
+
+        private void EditFile(object obj)
+        {
+            DocProperties docProperties = new DocProperties
+            {
+                CreationDate = CreateDate,
+                Creator = Creator,
+                TotalTime = TotalTime,
+                ModifiedDate = ModifiedDate
+            };
+
+            _fileService.SaveFileAndArchive(docProperties);
+
+        }
+
 
     }
 

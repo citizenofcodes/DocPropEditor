@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DocPropEditor.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DocPropEditor
 {
@@ -23,6 +25,7 @@ namespace DocPropEditor
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = App.AppHost.Services.GetRequiredService<MainWindowViewModel>();
         }
     }
 }

@@ -22,7 +22,12 @@ namespace DocPropEditor.Infrastructure.Command
 
         public bool CanExecute(object parameter)
         {
-            return _canExecute(parameter);
+            if (_canExecute != null)
+            {
+                return _canExecute(parameter);
+            }
+
+            return true;
         }
 
         public void Execute(object parameter)
