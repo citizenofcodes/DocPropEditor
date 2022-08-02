@@ -1,5 +1,5 @@
-﻿using System;
-using DocPropEditor.Models;
+﻿using DocPropEditor.Models;
+using Microsoft.VisualBasic;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
@@ -16,39 +16,35 @@ namespace DocPropEditor.Services
 
     internal class FileService : IFileService
     {
-        public DirectoryInfo TempDirectoryPath { get; set; }
-        public string FilesPathDirectory { get; set; } = "C:\\ArchiveTemp\\docProps";
-        
-        public string oldFilePath { get; set; }
-        public string FileCore { get; set; }
-        public string FileApp { get; set; }
-        public string Creator { get; set; }
-        public string Creationdate { get; set; }
-        public string ModifiedDate { get; set; }
-        public string TotalTime { get; set; }
-        
+        private DirectoryInfo TempDirectoryPath { get; set; }
+        private string FilesPathDirectory { get; set; } = "C:\\ArchiveTemp\\docProps";
+
+        private string oldFilePath { get; set; }
+        private string FileCore { get; set; }
+        private string FileApp { get; set; }
+        private string Creator { get; set; }
+        private string Creationdate { get; set; }
+        private string ModifiedDate { get; set; }
+        private string TotalTime { get; set; }
+
         public DocProperties OpenArchiveAndGetData()
         {
             oldFilePath = ChooseFile();
+
             Directory.CreateDirectory("C:\\ArchiveTemp");
 
             ZipFile.ExtractToDirectory(oldFilePath, "C:\\ArchiveTemp");
 
-            TempDirectoryPath = new DirectoryInfo("C:\\ArchiveTemp\\");
-
-
             var docProp = OpenFilesAndGetDocProperties();
 
             return docProp;
-
         }
 
         public DocProperties OpenFilesAndGetDocProperties()
         {
-            StreamReader sr = new StreamReader(FilesPathDirectory + "\\app.xml");
+            using var sr = new StreamReader(FilesPathDirectory + "\\app.xml");
             FileApp = sr.ReadToEnd();
             sr.Close();
-            sr.Dispose();
 
             var sr2 = new StreamReader(FilesPathDirectory + "\\core.xml");
 
@@ -78,9 +74,7 @@ namespace DocPropEditor.Services
 
         public void SaveFileAndArchive(DocProperties docProperties)
         {
-
-            StreamWriter sw = new StreamWriter(FilesPathDirectory + "\\core.xml", false);
-
+            using var sw = new StreamWriter(FilesPathDirectory + "\\core.xml", false);
             var newCoreFile = FileCore.Replace(Creator,
                     docProperties.Creator)
                 .Replace(Creationdate,
@@ -91,18 +85,15 @@ namespace DocPropEditor.Services
             sw.WriteLine(newCoreFile);
 
             sw.Close();
-            sw.Dispose();
 
-            StreamWriter sw2 = new StreamWriter(FilesPathDirectory + "\\app.xml", false);
+            var sw2 = new StreamWriter(FilesPathDirectory + "\\app.xml", false);
 
             var newAppFile = FileApp.Replace(TotalTime, docProperties.TotalTime);
             sw2.WriteLine(newAppFile);
             sw2.Close();
-            sw2.Dispose();
 
-            ZipFile.CreateFromDirectory(TempDirectoryPath.FullName, oldFilePath.Replace(".docx", "Edited.docx") );
+            ZipFile.CreateFromDirectory(TempDirectoryPath.FullName, oldFilePath.Replace(".docx", $"{DateAndTime.Now.Second}.docx"));
 
-            TempDirectoryPath.Delete(true);
 
             MessageBox.Show("Успешно!");
         }
@@ -110,6 +101,9 @@ namespace DocPropEditor.Services
 
         public string ChooseFile()
         {
+            if (TempDirectoryPath.Exists)
+                TempDirectoryPath.Delete(true);
+
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             bool? result = dlg.ShowDialog();
@@ -117,7 +111,10 @@ namespace DocPropEditor.Services
             return dlg.FileName;
         }
 
-
+        public FileService()
+        {
+            TempDirectoryPath = new DirectoryInfo("C:\\ArchiveTemp\\");
+        }
     }
 
 

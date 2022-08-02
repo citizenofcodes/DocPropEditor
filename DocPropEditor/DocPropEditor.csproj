@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="Iconic.Zlib.Netstandard" Version="1.0.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />

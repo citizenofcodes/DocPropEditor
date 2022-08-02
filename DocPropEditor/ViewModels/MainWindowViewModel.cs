@@ -16,8 +16,16 @@ namespace DocPropEditor.ViewModels
 
         public ICommand OpenFIleCommand { get; set; }
         public ICommand EditCommand { get; set; }
-        
-        
+
+        private bool _isChoosed;
+        public bool IsChoosed
+        {
+            get { return _isChoosed; }
+            set
+            {
+                _isChoosed = value; OnPropertyChanged();}
+        }
+
 
         private string? _creator;
 
@@ -57,6 +65,7 @@ namespace DocPropEditor.ViewModels
         }
 
         private string? _modifiedDate;
+        
 
         public string? ModifiedDate
         {
@@ -67,7 +76,7 @@ namespace DocPropEditor.ViewModels
         public MainWindowViewModel(IFileService fileService)
         {
             _fileService = fileService;
-            EditCommand = new Command(EditFile);
+            EditCommand = new Command(EditFile, () => IsChoosed);
             OpenFIleCommand = new Command(Onload);
         }
 
@@ -79,6 +88,9 @@ namespace DocPropEditor.ViewModels
             TotalTime = docprop.TotalTime;
             CreateDate = docprop.CreationDate;
             ModifiedDate = docprop.ModifiedDate;
+
+            IsChoosed = true;
+            OnPropertyChanged(nameof(IsChoosed));
 
         }
 

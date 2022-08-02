@@ -8,16 +8,16 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="WordHacker" Height="300" Width="227" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Property Word Editor" Height="343" Width="227" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding OnloadCommand}"></i:InvokeCommandAction>
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    <Window.Resources>
+        
+    </Window.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <Border  Margin="0,4,0,4" Padding="5" BorderThickness="0.2" BorderBrush="Black" CornerRadius="3" HorizontalAlignment="Center" Width="179">
             <StackPanel Grid.ColumnSpan="2">
                 <Label Content="Creator"></Label>
@@ -29,10 +29,10 @@
                 <Label Content="Modified"></Label>
                 <TextBox x:Name="ModifiedTimeBox" MinHeight="20" Text="{Binding ModifiedDate,UpdateSourceTrigger=PropertyChanged}" ></TextBox>
                 <Button Background="White"  Command="{Binding OpenFIleCommand}" Margin="0,10,0,0" MaxWidth="50" HorizontalAlignment="Left">
-                    <Image Source="/Resourses/directoryicon.png" MaxWidth="25"></Image>
+                    <Image Source="/Resourses/directoryicon.png"></Image>
                 </Button>
 
-                <Button  Content="Edit" Command="{Binding EditCommand}" Margin="0,5,0,0" MaxWidth="100"></Button>
+                <Button  Content="Edit" Command="{Binding EditCommand}" Margin="0,5,0,0" MaxWidth="100" FontSize="12" Foreground="White" FontWeight="Normal"></Button>
             </StackPanel>
         </Border>
     </Grid>
