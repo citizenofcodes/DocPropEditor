@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using DocPropEditor.Infrastructure.Command;
+﻿using DocPropEditor.Infrastructure.Command;
 using DocPropEditor.Models;
 using DocPropEditor.Services;
+using System.Windows.Input;
 
 namespace DocPropEditor.ViewModels
 {
@@ -23,7 +18,8 @@ namespace DocPropEditor.ViewModels
             get { return _isChoosed; }
             set
             {
-                _isChoosed = value; OnPropertyChanged();}
+                _isChoosed = value; OnPropertyChanged();
+            }
         }
 
 
@@ -37,11 +33,28 @@ namespace DocPropEditor.ViewModels
                 _creator = value;
                 OnPropertyChanged();
             }
+
+        }
+
+        private string? _lastModifiedBy;
+
+        public string LastModifiedBy
+        {
+            get { return _lastModifiedBy; }
+            set { _lastModifiedBy = value; OnPropertyChanged(); }
+        }
+
+        private string _lastModifiedByIsVisible;
+
+        public string LastModifiedByIsVisible
+        {
+            get { return _lastModifiedByIsVisible; }
+            set { _lastModifiedByIsVisible = value; OnPropertyChanged();}
         }
 
 
-        private string? _totalTime;
 
+        private string? _totalTime;
         public string? TotalTime
         {
             get { return _totalTime; }
@@ -65,7 +78,7 @@ namespace DocPropEditor.ViewModels
         }
 
         private string? _modifiedDate;
-        
+
 
         public string? ModifiedDate
         {
@@ -85,12 +98,16 @@ namespace DocPropEditor.ViewModels
 
             var docprop = _fileService.OpenArchiveAndGetData();
             Creator = docprop.Creator;
+            LastModifiedBy = docprop.LastModifiedBy;
             TotalTime = docprop.TotalTime;
             CreateDate = docprop.CreationDate;
             ModifiedDate = docprop.ModifiedDate;
 
+            LastModifiedByIsVisible = LastModifiedBy != "" && LastModifiedBy != Creator ? "Visible" : "Collapsed";
+
             IsChoosed = true;
             OnPropertyChanged(nameof(IsChoosed));
+            OnPropertyChanged(nameof(LastModifiedByIsVisible));
 
         }
 
@@ -99,6 +116,7 @@ namespace DocPropEditor.ViewModels
             DocProperties docProperties = new DocProperties
             {
                 CreationDate = CreateDate,
+                LastModifiedBy = LastModifiedBy,
                 Creator = Creator,
                 TotalTime = TotalTime,
                 ModifiedDate = ModifiedDate

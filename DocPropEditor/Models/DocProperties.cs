@@ -16,5 +16,6 @@ namespace DocPropEditor.Models
         public string CreationDate { get; set; }
 
         public string ModifiedDate { get; set; }
+        public string LastModifiedBy { get; set; }
     }
 }

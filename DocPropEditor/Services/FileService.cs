@@ -23,6 +23,7 @@ namespace DocPropEditor.Services
         private string FileCore { get; set; }
         private string FileApp { get; set; }
         private string Creator { get; set; }
+        private string LastModifiedBy { get; set; }
         private string Creationdate { get; set; }
         private string ModifiedDate { get; set; }
         private string TotalTime { get; set; }
@@ -52,6 +53,8 @@ namespace DocPropEditor.Services
 
             Creator = Regex.Match(FileCore, @"<dc:creator>(.*)<.dc:creator>").Groups[1].ToString();
 
+            LastModifiedBy = Regex.Match(FileCore, @"ModifiedBy>(.*)<.cp:lastModifiedBy>").Groups[1].ToString();
+
             Creationdate = Regex.Match(FileCore, @"<dcterms:created.*>(.*)<.dcterms:created>").Groups[1].ToString();
 
             ModifiedDate = Regex.Match(FileCore, @"<dcterms:modified.*>(.*)<.dcterms:modified>").Groups[1].ToString();
@@ -63,6 +66,7 @@ namespace DocPropEditor.Services
             DocProperties docProperties = new DocProperties
             {
                 Creator = Creator,
+                LastModifiedBy = LastModifiedBy,
                 CreationDate = Creationdate,
                 ModifiedDate = ModifiedDate,
                 TotalTime = TotalTime
@@ -74,22 +78,27 @@ namespace DocPropEditor.Services
 
         public void SaveFileAndArchive(DocProperties docProperties)
         {
+            string newFileCore;
+            string newFileApp;
             using var sw = new StreamWriter(FilesPathDirectory + "\\core.xml", false);
-            var newCoreFile = FileCore.Replace(Creator,
+            newFileCore = FileCore.Replace(Creator,
                     docProperties.Creator)
                 .Replace(Creationdate,
                     docProperties.CreationDate)
                 .Replace(ModifiedDate,
                     docProperties.ModifiedDate);
 
-            sw.WriteLine(newCoreFile);
+            if (LastModifiedBy != "")
+                newFileCore = newFileCore.Replace(LastModifiedBy, docProperties.LastModifiedBy);
+
+            sw.WriteLine(newFileCore);
 
             sw.Close();
 
             var sw2 = new StreamWriter(FilesPathDirectory + "\\app.xml", false);
 
-            var newAppFile = FileApp.Replace(TotalTime, docProperties.TotalTime);
-            sw2.WriteLine(newAppFile);
+            newFileApp = FileApp.Replace(TotalTime, docProperties.TotalTime);
+            sw2.WriteLine(newFileApp);
             sw2.Close();
 
             ZipFile.CreateFromDirectory(TempDirectoryPath.FullName, oldFilePath.Replace(".docx", $"{DateAndTime.Now.Second}.docx"));
