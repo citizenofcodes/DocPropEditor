@@ -1,7 +1,9 @@
 ﻿using DocPropEditor.Models;
 using Microsoft.VisualBasic;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 
@@ -27,6 +29,7 @@ namespace DocPropEditor.Services
         private string Creationdate { get; set; }
         private string ModifiedDate { get; set; }
         private string TotalTime { get; set; }
+        private string TotalTimeHtml { get; set; }
 
         public DocProperties OpenArchiveAndGetData()
         {
@@ -51,6 +54,8 @@ namespace DocPropEditor.Services
 
             FileCore = sr2.ReadToEnd();
 
+            sr2.Close();
+
             Creator = Regex.Match(FileCore, @"<dc:creator>(.*)<.dc:creator>").Groups[1].ToString();
 
             LastModifiedBy = Regex.Match(FileCore, @"ModifiedBy>(.*)<.cp:lastModifiedBy>").Groups[1].ToString();
@@ -60,6 +65,8 @@ namespace DocPropEditor.Services
             ModifiedDate = Regex.Match(FileCore, @"<dcterms:modified.*>(.*)<.dcterms:modified>").Groups[1].ToString();
 
             TotalTime = Regex.Match(FileApp, @"<TotalTime>(.*)<.TotalTime>").Groups[1].ToString();
+
+            TotalTimeHtml = Regex.Match(FileApp, @"<TotalTime>(.*)<.TotalTime>").ToString();
 
 
 
@@ -71,6 +78,7 @@ namespace DocPropEditor.Services
                 ModifiedDate = ModifiedDate,
                 TotalTime = TotalTime
             };
+
 
 
             return docProperties;
@@ -96,8 +104,7 @@ namespace DocPropEditor.Services
             sw.Close();
 
             var sw2 = new StreamWriter(FilesPathDirectory + "\\app.xml", false);
-
-            newFileApp = FileApp.Replace(TotalTime, docProperties.TotalTime);
+            newFileApp = FileApp.Replace(TotalTimeHtml , $"<TotalTime>{docProperties.TotalTime}</TotalTime>");
             sw2.WriteLine(newFileApp);
             sw2.Close();
 
@@ -105,12 +112,14 @@ namespace DocPropEditor.Services
 
 
             MessageBox.Show("Успешно!");
+
+            TempDirectoryPath.Delete(true);
         }
 
 
         public string ChooseFile()
         {
-            if (TempDirectoryPath.Exists)
+            if (Directory.Exists("C:\\ArchiveTemp"))
                 TempDirectoryPath.Delete(true);
 
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
