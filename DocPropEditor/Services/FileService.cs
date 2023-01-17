@@ -13,6 +13,7 @@ namespace DocPropEditor.Services
     {
         DocProperties OpenArchiveAndGetData();
         void SaveFileAndArchive(DocProperties docProperties);
+        void ClearTempFolder();
     }
 
 
@@ -113,14 +114,14 @@ namespace DocPropEditor.Services
 
             MessageBox.Show("Успешно!");
 
-            TempDirectoryPath.Delete(true);
+            
         }
 
 
         public string ChooseFile()
         {
             if (Directory.Exists("C:\\ArchiveTemp"))
-                TempDirectoryPath.Delete(true);
+                ClearTempFolder();
 
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
@@ -132,6 +133,11 @@ namespace DocPropEditor.Services
         public FileService()
         {
             TempDirectoryPath = new DirectoryInfo("C:\\ArchiveTemp\\");
+        }
+
+        public void ClearTempFolder()
+        {
+            TempDirectoryPath.Delete(true);
         }
     }
 
