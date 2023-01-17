@@ -1,6 +1,7 @@
 ﻿using DocPropEditor.Infrastructure.Command;
 using DocPropEditor.Models;
 using DocPropEditor.Services;
+using System;
 using System.Windows.Input;
 
 namespace DocPropEditor.ViewModels
@@ -91,6 +92,13 @@ namespace DocPropEditor.ViewModels
             _fileService = fileService;
             EditCommand = new Command(EditFile, () => IsChoosed);
             OpenFIleCommand = new Command(Onload);
+
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+        }
+
+        private void OnProcessExit(object? sender, EventArgs e)
+        {
+            _fileService.ClearTempFolder();
         }
 
         private void Onload(object obj)
